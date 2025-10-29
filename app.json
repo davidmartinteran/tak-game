@@ -1,22 +1,31 @@
 {
   "expo": {
-    "name": "TAK-GAME",
-    "slug": "TAK-GAME",
+    "name": "TAK Game",
+    "slug": "tak-game",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "takgame",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
+    "description": "A strategic abstract board game for two players",
+    "privacy": "public",
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.takgame.app",
+      "buildNumber": "1"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "edgeToEdgeEnabled": true
+      "package": "com.takgame.app",
+      "versionCode": 1,
+      "edgeToEdgeEnabled": true,
+      "permissions": [
+        "VIBRATE"
+      ]
     },
     "web": {
       "bundler": "metro",
@@ -33,7 +42,9 @@
           "resizeMode": "contain",
           "backgroundColor": "#ffffff"
         }
-      ]
+      ],
+      "expo-font",
+      "expo-web-browser"
     ],
     "experiments": {
       "typedRoutes": true

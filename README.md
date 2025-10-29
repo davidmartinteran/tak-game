@@ -1,50 +1,159 @@
-# Welcome to your Expo app 👋
+# TAK Game 🎲
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+Un juego de mesa digital de estrategia abstracta para 2 jugadores, desarrollado con React Native y Expo.
 
-## Get started
+## Acerca del Juego
 
-1. Install dependencies
+TAK es un juego de estrategia donde los jugadores compiten para:
+- **Victoria Principal**: Conectar dos lados opuestos del tablero con un "camino" de piedras planas o capstones
+- **Victoria Secundaria**: Controlar la mayoría de piedras planas cuando el tablero se llena
 
-   ```bash
-   npm install
-   ```
+**Características:**
+- Tableros de 3×3 hasta 8×8
+- 3 tipos de piedras: planas, muros y capstones
+- Sistema de apilamiento y movimiento
+- Guardado automático de partidas
+- Historial de movimientos con undo/redo
+- Animaciones fluidas y feedback háptico
+- Soporte multiplataforma (iOS, Android, Web)
 
-2. Start the app
+## 🚀 Inicio Rápido
 
-   ```bash
-   npx expo start
-   ```
-
-In the output, you'll find options to open the app in a
-
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
-
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
-
-## Get a fresh project
-
-When you're ready, run:
+### Instalación
 
 ```bash
-npm run reset-project
+npm install
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+### Desarrollo
 
-## Learn more
+```bash
+# Iniciar servidor de desarrollo
+npx expo start
 
-To learn more about developing your project with Expo, look at the following resources:
+# Ejecutar en Android
+npx expo start --android
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+# Ejecutar en iOS
+npx expo start --ios
 
-## Join the community
+# Ejecutar en Web
+npx expo start --web
+```
 
-Join our community of developers creating universal apps.
+### Scripts Disponibles
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+```bash
+npm start       # Iniciar servidor de desarrollo
+npm run android # Ejecutar en Android
+npm run ios     # Ejecutar en iOS
+npm run web     # Ejecutar en navegador
+npm test        # Ejecutar tests
+npm run lint    # Ejecutar linter
+```
+
+## 🏗️ Arquitectura
+
+El proyecto sigue una arquitectura modular y escalable. Para información detallada, consulta [ARCHITECTURE.md](./ARCHITECTURE.md).
+
+### Stack Tecnológico
+
+- **Framework**: React Native + Expo
+- **Lenguaje**: TypeScript
+- **Estado**: Zustand (patrón Slices)
+- **Navegación**: Expo Router
+- **Testing**: Jest + React Testing Library
+- **Animaciones**: React Native Reanimated
+- **Persistencia**: AsyncStorage
+
+### Estructura del Proyecto
+
+```
+src/
+├── types/           # Tipos organizados por dominio
+├── store/           # Estado global (Zustand slices)
+├── components/      # Componentes React organizados
+│   ├── game/       # Lógica del juego
+│   ├── layout/     # Layout y estructura
+│   └── ui/         # Componentes UI reutilizables
+├── utils/          # Utilidades y lógica de negocio
+├── services/       # Servicios (persistencia, haptics, etc.)
+├── hooks/          # Custom React hooks
+├── contexts/       # React Contexts
+└── constants/      # Constantes de la app
+
+app/                # Expo Router screens
+├── _layout.tsx    # Layout raíz
+├── index.tsx      # Menú principal
+├── game.tsx       # Pantalla del juego
+└── settings.tsx   # Configuración
+```
+
+## 🎯 Características Principales
+
+- ✅ **Múltiples tamaños de tablero** (3×3 a 8×8)
+- ✅ **Sistema de tipos de piedras** (planas, muros, capstones)
+- ✅ **Detección automática de victoria**
+- ✅ **Guardado automático** de partidas
+- ✅ **Historial completo** de movimientos
+- ✅ **Undo/Redo** ilimitado
+- ✅ **Animaciones fluidas**
+- ✅ **Feedback háptico**
+- ✅ **Soporte multiplataforma** (iOS, Android, Web)
+- ✅ **Accesibilidad** integrada
+
+## 📝 Reglas del Juego
+
+Consulta [GameRules.md](./GameRules.md) para las reglas completas del juego TAK.
+
+## 🧪 Testing
+
+```bash
+# Ejecutar todos los tests
+npm test
+
+# Ejecutar tests en modo watch
+npm test -- --watch
+
+# Ejecutar tests con coverage
+npm test -- --coverage
+```
+
+## 📚 Documentación
+
+- [ARCHITECTURE.md](./ARCHITECTURE.md) - Arquitectura detallada del proyecto
+- [GameRules.md](./GameRules.md) - Reglas del juego TAK
+
+## 🔧 Desarrollo
+
+### Agregar Nuevos Componentes
+
+1. Determina la categoría (game/layout/ui/...)
+2. Crea el archivo en la carpeta apropiada
+3. Actualiza el `index.ts` de la carpeta
+4. Importa usando barrel exports
+
+### Agregar Nuevos Slices al Store
+
+1. Crea archivo en `src/store/slices/`
+2. Define interface y createSlice
+3. Combina en `src/store/index.ts`
+
+## 🤝 Contribución
+
+Las contribuciones son bienvenidas. Por favor:
+1. Haz fork del proyecto
+2. Crea una rama para tu feature
+3. Asegúrate de que los tests pasen
+4. Crea un Pull Request
+
+## 📄 Licencia
+
+Este proyecto está bajo licencia MIT.
+
+## 🔗 Recursos
+
+- [Expo Documentation](https://docs.expo.dev/)
+- [React Native Documentation](https://reactnative.dev/)
+- [Zustand Documentation](https://github.com/pmndrs/zustand)
+- [TAK Game Official Site](https://cheapass.com/tak/)
