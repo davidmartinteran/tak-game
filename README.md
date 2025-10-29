@@ -1,6 +1,10 @@
 # TAK Game 🎲
 
+![Build Status](https://github.com/YOUR-USERNAME/TAK-GAME/workflows/Preview%20Build/badge.svg)
+
 Un juego de mesa digital de estrategia abstracta para 2 jugadores, desarrollado con React Native y Expo.
+
+> 📱 **[Descargar APK](https://expo.dev)** | 🌐 **[Jugar en Web](https://YOUR-USERNAME.github.io/TAK-GAME)**
 
 ## Acerca del Juego
 
@@ -44,12 +48,20 @@ npx expo start --web
 ### Scripts Disponibles
 
 ```bash
+# Desarrollo
 npm start       # Iniciar servidor de desarrollo
 npm run android # Ejecutar en Android
 npm run ios     # Ejecutar en iOS
 npm run web     # Ejecutar en navegador
+
+# Testing y Calidad
 npm test        # Ejecutar tests
 npm run lint    # Ejecutar linter
+
+# Builds
+npm run build:web         # Build para web
+npm run build:preview     # Build preview APK
+npm run build:production  # Build producción (AAB/IPA)
 ```
 
 ## 🏗️ Arquitectura
@@ -123,6 +135,42 @@ npm test -- --coverage
 
 - [ARCHITECTURE.md](./ARCHITECTURE.md) - Arquitectura detallada del proyecto
 - [GameRules.md](./GameRules.md) - Reglas del juego TAK
+- [CI_CD_SETUP.md](./CI_CD_SETUP.md) - Configuración completa de CI/CD
+- [QUICK_START_CICD.md](./QUICK_START_CICD.md) - Guía rápida de CI/CD (5 minutos)
+
+## 🚀 CI/CD y Distribución
+
+Este proyecto incluye pipelines automatizados de CI/CD para generar builds descargables:
+
+### Setup Rápido (5 minutos)
+```bash
+# 1. Instalar EAS CLI e inicializar
+npm install -g eas-cli
+eas login
+eas init
+
+# 2. Configurar GitHub Secret (EXPO_TOKEN)
+# Ver: QUICK_START_CICD.md
+
+# 3. ¡Listo! Cada push genera automáticamente un APK descargable
+```
+
+### Flujos Automatizados
+- **Preview Build**: Se ejecuta en cada push a `main`/`develop`
+  - Genera APK para testing
+  - Disponible en Expo Dashboard en 10-15 minutos
+
+- **Release Build**: Se ejecuta al crear tags (`v1.0.0`)
+  - Genera AAB para Google Play Store
+  - Genera IPA para App Store
+  - Crea GitHub Release
+
+- **Web Deploy**: Despliega automáticamente a GitHub Pages
+
+### Descargar Builds
+Accede a tus builds en: `https://expo.dev/accounts/[TU-USUARIO]/projects/tak-game/builds`
+
+📖 **Documentación detallada:** [CI_CD_SETUP.md](./CI_CD_SETUP.md)
 
 ## 🔧 Desarrollo
 

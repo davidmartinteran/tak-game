@@ -10,7 +10,10 @@
     "web": "expo start --web",
     "lint": "expo lint",
     "test": "jest",
-    "test:watch": "jest --watch"
+    "test:watch": "jest --watch",
+    "build:web": "npx expo export --platform web",
+    "build:preview": "eas build --platform android --profile preview",
+    "build:production": "eas build --platform all --profile production"
   },
   "dependencies": {
     "@expo/vector-icons": "^15.0.3",
