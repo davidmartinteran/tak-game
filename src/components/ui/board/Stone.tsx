@@ -39,9 +39,6 @@ export const Stone: React.FC<StoneProps> = React.memo(({
   const playerColor = stone.owner === Player.PLAYER1 ? Colors.player1 : Colors.player2;
   const stoneSize = scaleWidth(size);
   
-  // Calculate position offset for stacking
-  const stackOffset = stackIndex * scaleHeight(2);
-  
   // Animation values with error handling - using Reanimated 3 for native performance
   // const { createValue } = useSafeAnimation(); // Unused variable
   const scale = useSharedValue(1);
@@ -177,7 +174,6 @@ export const Stone: React.FC<StoneProps> = React.memo(({
           width: stoneSize,
           height: stoneSize,
           borderRadius: stoneSize * 0.1,
-          bottom: stackOffset,
         },
       ]}
       accessibilityLabel={`${stone.owner} flat stone`}
@@ -220,7 +216,6 @@ export const Stone: React.FC<StoneProps> = React.memo(({
           width: stoneSize * 0.85,
           height: stoneSize * 0.85,
           borderRadius: stoneSize * 0.08,
-          bottom: stackOffset,
           transform: [{ rotate: '45deg' }],
         },
       ]}
@@ -298,7 +293,6 @@ export const Stone: React.FC<StoneProps> = React.memo(({
         {
           width: stoneSize,
           height: stoneSize,
-          bottom: stackOffset,
         },
       ]}
       accessibilityLabel={`${stone.owner} capstone`}

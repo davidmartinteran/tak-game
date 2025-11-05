@@ -45,7 +45,6 @@ export const Stack: React.FC<StackProps> = ({
         { width: size, height: size },
         isSelected && styles.selected,
         isHighlighted && styles.highlighted,
-        isMultiStone && styles.shadow,
       ]}
     >
       {/* Render top stone */}
