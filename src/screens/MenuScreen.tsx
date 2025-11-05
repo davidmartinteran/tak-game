@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, Text, StyleSheet, ScrollView, TextStyle } from 'react-native';
+import { useTranslation } from 'react-i18next';
 import { Button } from '../components/ui/common/Button';
 import { Modal } from '../components/ui/feedback/Modal';
 import { Colors } from '../constants/colors';
@@ -15,15 +16,15 @@ interface BoardSizeOption {
   size: number;
   flatStones: number;
   capstones: number;
-  description: string;
+  descriptionKey: string;
 }
 
 const BOARD_SIZE_OPTIONS: BoardSizeOption[] = [
-  { size: 4, flatStones: 15, capstones: 0, description: 'Quick Game (4x4)' },
-  { size: 5, flatStones: 21, capstones: 1, description: 'Standard Game (5x5)' },
-  { size: 6, flatStones: 30, capstones: 1, description: 'Extended Game (6x6)' },
-  { size: 7, flatStones: 40, capstones: 2, description: 'Long Game (7x7)' },
-  { size: 8, flatStones: 50, capstones: 2, description: 'Epic Game (8x8)' },
+  { size: 4, flatStones: 15, capstones: 0, descriptionKey: 'menu.quickGame' },
+  { size: 5, flatStones: 21, capstones: 1, descriptionKey: 'menu.standardGame' },
+  { size: 6, flatStones: 30, capstones: 1, descriptionKey: 'menu.extendedGame' },
+  { size: 7, flatStones: 40, capstones: 2, descriptionKey: 'menu.longGame' },
+  { size: 8, flatStones: 50, capstones: 2, descriptionKey: 'menu.epicGame' },
 ];
 
 export const MenuScreen: React.FC<MenuScreenProps> = ({
@@ -31,6 +32,8 @@ export const MenuScreen: React.FC<MenuScreenProps> = ({
   onBoardSizeSelect,
   onClose,
 }) => {
+  const { t } = useTranslation();
+
   const handleBoardSizeSelect = (size: number) => {
     onBoardSizeSelect(size);
     onClose();
@@ -39,43 +42,43 @@ export const MenuScreen: React.FC<MenuScreenProps> = ({
   return (
     <Modal
       visible={visible}
-      title="New Game"
+      title={t('menu.newGame')}
       onClose={onClose}
     >
       <View style={styles.container}>
         <View style={styles.header}>
           <View style={styles.titleContainer}>
-            <Text style={styles.titleText}>Select Board Size</Text>
+            <Text style={styles.titleText}>{t('menu.selectBoardSize')}</Text>
           </View>
           <Text style={styles.subtitleText}>
-            Choose your preferred game complexity
+            {t('menu.chooseComplexity')}
           </Text>
         </View>
 
-        <ScrollView 
+        <ScrollView
           style={styles.optionsContainer}
           showsVerticalScrollIndicator={false}
         >
           {BOARD_SIZE_OPTIONS.map((option) => (
             <View key={option.size} style={styles.optionCard}>
               <Button
-                title={option.description}
+                title={t(option.descriptionKey)}
                 onPress={() => handleBoardSizeSelect(option.size)}
                 style={styles.optionButton}
                 textStyle={styles.optionButtonText}
               />
               <View style={styles.optionDetails}>
                 <View style={styles.detailRow}>
-                  <Text style={styles.detailLabel}>Board Size:</Text>
+                  <Text style={styles.detailLabel}>{t('menu.boardSize')}:</Text>
                   <Text style={styles.detailValue}>{option.size}x{option.size}</Text>
                 </View>
                 <View style={styles.detailRow}>
-                  <Text style={styles.detailLabel}>Flat Stones:</Text>
-                  <Text style={styles.detailValue}>{option.flatStones} per player</Text>
+                  <Text style={styles.detailLabel}>{t('menu.flatStones')}:</Text>
+                  <Text style={styles.detailValue}>{option.flatStones} {t('menu.perPlayer')}</Text>
                 </View>
                 <View style={styles.detailRow}>
-                  <Text style={styles.detailLabel}>Capstones:</Text>
-                  <Text style={styles.detailValue}>{option.capstones} per player</Text>
+                  <Text style={styles.detailLabel}>{t('menu.capstones')}:</Text>
+                  <Text style={styles.detailValue}>{option.capstones} {t('menu.perPlayer')}</Text>
                 </View>
               </View>
             </View>

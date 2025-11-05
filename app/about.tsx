@@ -2,11 +2,14 @@ import React from 'react';
 import { View, Text, StyleSheet, ScrollView, Linking } from 'react-native';
 import { router } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
+import { useTranslation } from 'react-i18next';
 import { Button } from '@/src/components/ui/common/Button';
 import { Colors } from '@/src/constants/colors';
 import { scaleWidth, scaleHeight, scaleFontSize } from '@/src/utils/responsive';
 
 export default function AboutScreen() {
+  const { t } = useTranslation();
+
   const handleBack = () => {
     router.back();
   };
@@ -22,118 +25,112 @@ export default function AboutScreen() {
       {/* Header */}
       <View style={styles.header}>
         <Button
-          title="← Back"
+          title={`← ${t('common.back')}`}
           onPress={handleBack}
           style={styles.backButton}
           textStyle={styles.backButtonText}
         />
-        <Text style={styles.headerTitle}>About TAK</Text>
+        <Text style={styles.headerTitle}>{t('about.title')}</Text>
         <View style={styles.headerSpacer} />
       </View>
 
       <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
         {/* Game Title Section */}
         <View style={styles.section}>
-          <Text style={styles.gameTitle}>TAK</Text>
-          <Text style={styles.gameSubtitle}>The Beautiful Game</Text>
+          <Text style={styles.gameTitle}>{t('about.gameTitle')}</Text>
+          <Text style={styles.gameSubtitle}>{t('about.gameSubtitle')}</Text>
         </View>
 
         {/* Game Description */}
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>What is TAK?</Text>
+          <Text style={styles.sectionTitle}>{t('about.whatIsTak')}</Text>
           <Text style={styles.bodyText}>
-            Tak is an abstract strategy game designed by James Ernest and Patrick Rothfuss. 
-            It was first introduced in Patrick Rothfuss&apos;s fantasy novel &quot;The Wise Man&apos;s Fear&quot; 
-            as a fictional game, and later brought to life as a real board game.
+            {t('about.whatIsTakText')}
           </Text>
         </View>
 
         {/* How to Play */}
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>How to Play</Text>
+          <Text style={styles.sectionTitle}>{t('about.howToPlay')}</Text>
           <Text style={styles.bodyText}>
-            The goal of Tak is to create a road - a connected line of your pieces that spans 
-            from one edge of the board to the opposite edge. Players take turns placing and 
-            moving pieces on the board.
+            {t('about.howToPlayText')}
           </Text>
-          
+
           <View style={styles.subsection}>
-            <Text style={styles.subsectionTitle}>Piece Types:</Text>
-            <Text style={styles.bulletText}>• <Text style={styles.bold}>Flat Stones</Text> - Basic pieces that can form roads</Text>
-            <Text style={styles.bulletText}>• <Text style={styles.bold}>Walls</Text> - Standing stones that block roads and movement</Text>
-            <Text style={styles.bulletText}>• <Text style={styles.bold}>Capstones</Text> - Special pieces that can flatten walls and form roads</Text>
+            <Text style={styles.subsectionTitle}>{t('about.pieceTypes')}</Text>
+            <Text style={styles.bulletText}>• <Text style={styles.bold}>{t('stoneTypes.flat')}</Text> - {t('about.flatStonesDesc')}</Text>
+            <Text style={styles.bulletText}>• <Text style={styles.bold}>{t('stoneTypes.standing')}</Text> - {t('about.wallsDesc')}</Text>
+            <Text style={styles.bulletText}>• <Text style={styles.bold}>{t('stoneTypes.capstone')}</Text> - {t('about.capstonesDesc')}</Text>
           </View>
 
           <View style={styles.subsection}>
-            <Text style={styles.subsectionTitle}>Victory Conditions:</Text>
-            <Text style={styles.bulletText}>• Create a road connecting opposite edges</Text>
-            <Text style={styles.bulletText}>• Have the most flat stones when the board is full</Text>
+            <Text style={styles.subsectionTitle}>{t('about.victoryConditions')}</Text>
+            <Text style={styles.bulletText}>• {t('about.createRoad')}</Text>
+            <Text style={styles.bulletText}>• {t('about.mostFlats')}</Text>
           </View>
         </View>
 
         {/* Special Rules */}
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Special Rules</Text>
+          <Text style={styles.sectionTitle}>{t('about.specialRules')}</Text>
           <Text style={styles.bodyText}>
-            <Text style={styles.bold}>First Turn:</Text> Each player&apos;s first move must place an opponent&apos;s flat stone. 
-            This ensures a more balanced opening.
+            <Text style={styles.bold}>{t('about.firstTurn')}</Text> {t('about.firstTurnText')}
           </Text>
           <Text style={styles.bodyText}>
-            <Text style={styles.bold}>Stack Movement:</Text> You can pick up and move stacks of pieces, 
-            dropping them along orthogonal paths. The carry limit equals the board size.
+            <Text style={styles.bold}>{t('about.stackMovement')}</Text> {t('about.stackMovementText')}
           </Text>
         </View>
 
         {/* Board Sizes */}
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Board Sizes</Text>
+          <Text style={styles.sectionTitle}>{t('about.boardSizes')}</Text>
           <View style={styles.boardSizeGrid}>
             <View style={styles.boardSizeItem}>
               <Text style={styles.boardSizeTitle}>4×4</Text>
-              <Text style={styles.boardSizeDesc}>Quick Game</Text>
-              <Text style={styles.boardSizeDetails}>15 stones, 0 capstones</Text>
+              <Text style={styles.boardSizeDesc}>{t('about.quickGame')}</Text>
+              <Text style={styles.boardSizeDetails}>15 {t('about.stones')}, 0 {t('about.capstones')}</Text>
             </View>
             <View style={styles.boardSizeItem}>
               <Text style={styles.boardSizeTitle}>5×5</Text>
-              <Text style={styles.boardSizeDesc}>Standard Game</Text>
-              <Text style={styles.boardSizeDetails}>21 stones, 1 capstone</Text>
+              <Text style={styles.boardSizeDesc}>{t('about.standardGame')}</Text>
+              <Text style={styles.boardSizeDetails}>21 {t('about.stones')}, 1 {t('about.capstone')}</Text>
             </View>
             <View style={styles.boardSizeItem}>
               <Text style={styles.boardSizeTitle}>6×6</Text>
-              <Text style={styles.boardSizeDesc}>Extended Game</Text>
-              <Text style={styles.boardSizeDetails}>30 stones, 1 capstone</Text>
+              <Text style={styles.boardSizeDesc}>{t('about.extendedGame')}</Text>
+              <Text style={styles.boardSizeDetails}>30 {t('about.stones')}, 1 {t('about.capstone')}</Text>
             </View>
             <View style={styles.boardSizeItem}>
               <Text style={styles.boardSizeTitle}>7×7</Text>
-              <Text style={styles.boardSizeDesc}>Long Game</Text>
-              <Text style={styles.boardSizeDetails}>40 stones, 2 capstones</Text>
+              <Text style={styles.boardSizeDesc}>{t('about.longGame')}</Text>
+              <Text style={styles.boardSizeDetails}>40 {t('about.stones')}, 2 {t('about.capstones')}</Text>
             </View>
             <View style={styles.boardSizeItem}>
               <Text style={styles.boardSizeTitle}>8×8</Text>
-              <Text style={styles.boardSizeDesc}>Epic Game</Text>
-              <Text style={styles.boardSizeDetails}>50 stones, 2 capstones</Text>
+              <Text style={styles.boardSizeDesc}>{t('about.epicGame')}</Text>
+              <Text style={styles.boardSizeDetails}>50 {t('about.stones')}, 2 {t('about.capstones')}</Text>
             </View>
           </View>
         </View>
 
         {/* Credits */}
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Credits</Text>
+          <Text style={styles.sectionTitle}>{t('about.credits')}</Text>
           <Text style={styles.bodyText}>
-            <Text style={styles.bold}>Game Design:</Text> James Ernest & Patrick Rothfuss
+            <Text style={styles.bold}>{t('about.gameDesign')}</Text> {t('about.gameDesigners')}
           </Text>
           <Text style={styles.bodyText}>
-            <Text style={styles.bold}>Original Publisher:</Text> Cheapass Games
+            <Text style={styles.bold}>{t('about.originalPublisher')}</Text> {t('about.publisher')}
           </Text>
           <Text style={styles.bodyText}>
-            <Text style={styles.bold}>Mobile Implementation:</Text> Built with React Native
+            <Text style={styles.bold}>{t('about.mobileImplementation')}</Text> {t('about.builtWith')}
           </Text>
         </View>
 
         {/* Learn More Button */}
         <View style={styles.section}>
           <Button
-            title="Learn More Online"
+            title={t('about.learnMoreOnline')}
             onPress={handleLearnMore}
             style={styles.learnMoreButton}
             textStyle={styles.learnMoreButtonText}
@@ -142,7 +139,7 @@ export default function AboutScreen() {
 
         {/* Version */}
         <View style={styles.footer}>
-          <Text style={styles.versionText}>Version 1.0.0</Text>
+          <Text style={styles.versionText}>{t('about.version')}</Text>
         </View>
       </ScrollView>
     </View>

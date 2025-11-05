@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { View, StyleSheet, Alert } from 'react-native';
 import { router } from 'expo-router';
+import { useTranslation } from 'react-i18next';
 import { GameBoard } from './GameBoard';
 import { VictoryModal } from '../ui/feedback/VictoryModal';
 import { GameStatus } from '../ui/hud/GameStatus';
@@ -20,6 +21,7 @@ interface GameFlowManagerContentProps {
 }
 
 const GameFlowManagerContent: React.FC<GameFlowManagerContentProps> = ({ initialBoardSize, resumeGame }) => {
+  const { t } = useTranslation();
   const gameState = useGameStore((state) => state.gameState);
   const uiState = useGameStore((state) => state.uiState);
   const initializeGame = useGameStore((state) => state.initializeGame);
@@ -31,10 +33,10 @@ const GameFlowManagerContent: React.FC<GameFlowManagerContentProps> = ({ initial
   const loadGame = useGameStore((state) => state.loadGame);
   const saveGame = useGameStore((state) => state.saveGame);
   const clearSavedGame = useGameStore((state) => state.clearSavedGame);
-  
+
   // Use toast context
   const { toastVisible, toastMessage, toastType, hideToast } = useToast();
-  
+
   // Use error handler
   const { reportError, showErrorToast, showSuccessToast, showInfoToast } = useErrorHandler();
   
@@ -65,7 +67,7 @@ const GameFlowManagerContent: React.FC<GameFlowManagerContentProps> = ({ initial
       // Show welcome message with first-turn instructions
       setTimeout(() => {
         showInfoToast(
-          `New ${size}x${size} game started! First turn: place opponent's flat stone.`
+          t('game.gameStarted', { size })
         );
       }, 500);
     } catch (error) {
@@ -94,11 +96,11 @@ const GameFlowManagerContent: React.FC<GameFlowManagerContentProps> = ({ initial
             setLastGamePhase(gameState.gamePhase);
 
             setTimeout(() => {
-              showSuccessToast('Game resumed successfully!');
+              showSuccessToast(t('game.gameResumed'));
             }, 500);
           } else {
             showErrorToast(
-              new Error('No saved game found'),
+              new Error(t('game.noSavedGame')),
               {
                 component: 'GameFlowManager',
                 action: 'resume_game'
@@ -170,24 +172,24 @@ const GameFlowManagerContent: React.FC<GameFlowManagerContentProps> = ({ initial
   // Handle restart current game
   const handleRestartGame = () => {
     Alert.alert(
-      'Restart Game',
-      'Are you sure you want to restart the current game? All progress will be lost.',
+      t('game.restartTitle'),
+      t('game.restartMessage'),
       [
         {
-          text: 'Cancel',
+          text: t('common.cancel'),
           style: 'cancel',
         },
         {
-          text: 'Restart',
+          text: t('game.restart'),
           style: 'destructive',
           onPress: async () => {
             try {
               setIsLoading(true);
               await new Promise(resolve => setTimeout(resolve, 200));
-              
+
               resetGame();
               setLastGamePhase('first-turn');
-              showSuccessToast('Game restarted! First turn: place opponent\'s flat stone.');
+              showSuccessToast(t('game.gameRestarted'));
             } catch (error) {
               const gameError = error instanceof Error ? error : new Error(String(error));
               showErrorToast(gameError, {
@@ -359,19 +361,19 @@ const GameFlowManagerContent: React.FC<GameFlowManagerContentProps> = ({ initial
         
         <View style={styles.controlButtons}>
           <Button
-            title="Menu"
+            title={t('game.menu')}
             onPress={handleReturnToMenu}
             style={StyleSheet.flatten([styles.controlButton, styles.menuButton])}
             textStyle={styles.controlButtonText}
           />
           <Button
-            title="Change Size"
+            title={t('game.changeSize')}
             onPress={handleChangeBoardSize}
             style={StyleSheet.flatten([styles.controlButton, styles.changeSizeButton])}
             textStyle={styles.controlButtonText}
           />
           <Button
-            title="Restart"
+            title={t('game.restart')}
             onPress={handleRestartGame}
             style={StyleSheet.flatten([styles.controlButton, styles.restartButton])}
             textStyle={styles.controlButtonText}
