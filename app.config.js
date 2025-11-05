@@ -10,6 +10,14 @@ export default {
   owner: 'davidmarte',
   version: process.env.APP_VERSION || appJson.expo.version,
 
+  // EAS Updates configuration
+  updates: {
+    url: 'https://u.expo.dev/1f480a26-c818-4900-ab25-35313d590085',
+  },
+  runtimeVersion: {
+    policy: 'appVersion',
+  },
+
   // Dynamic app identifier for different variants
   ios: {
     ...appJson.expo.ios,
