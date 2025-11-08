@@ -1,15 +1,30 @@
-import React from 'react';
-import { View, Text, StyleSheet, ScrollView, Switch, Alert } from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, StyleSheet, ScrollView, Switch, Alert, TouchableOpacity } from 'react-native';
 import { router } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
+import { useTranslation } from 'react-i18next';
 import { Button } from '@/src/components/ui/common/Button';
 import { Colors } from '@/src/constants/colors';
 import { scaleWidth, scaleHeight, scaleFontSize } from '@/src/utils/responsive';
 import { useSettings } from '@/src/contexts/SettingsContext';
 import { HapticService } from '@/src/services/HapticService';
+import { changeLanguage, getCurrentLanguage } from '@/src/i18n';
 
 export default function SettingsScreen() {
+  const { t } = useTranslation();
   const { settings, updateSetting, resetToDefaults } = useSettings();
+  const [selectedLanguage, setSelectedLanguage] = useState(getCurrentLanguage());
+
+  const languages = [
+    { code: 'en', name: t('settings.english'), nativeName: 'English' },
+    { code: 'es', name: t('settings.spanish'), nativeName: 'Español' },
+  ];
+
+  const handleLanguageChange = async (languageCode: string) => {
+    await HapticService.stoneSelection();
+    setSelectedLanguage(languageCode);
+    await changeLanguage(languageCode);
+  };
 
   const handleBack = () => {
     router.back();
@@ -17,15 +32,15 @@ export default function SettingsScreen() {
 
   const handleResetSettings = () => {
     Alert.alert(
-      'Reset Settings',
-      'Are you sure you want to reset all settings to default values?',
+      t('settings.resetConfirmTitle'),
+      t('settings.resetConfirmMessage'),
       [
         {
-          text: 'Cancel',
+          text: t('common.cancel'),
           style: 'cancel',
         },
         {
-          text: 'Reset',
+          text: t('settings.resetToDefaults'),
           style: 'destructive',
           onPress: async () => {
             await HapticService.buttonPress();
@@ -66,30 +81,72 @@ export default function SettingsScreen() {
       {/* Header */}
       <View style={styles.header}>
         <Button
-          title="← Back"
+          title={`← ${t('common.back')}`}
           onPress={handleBack}
           style={styles.backButton}
           textStyle={styles.backButtonText}
         />
-        <Text style={styles.headerTitle}>Settings</Text>
+        <Text style={styles.headerTitle}>{t('settings.title')}</Text>
         <View style={styles.headerSpacer} />
       </View>
 
       <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
+        {/* Language Section */}
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>{t('settings.language')}</Text>
+          <Text style={styles.languageDescription}>
+            {t('settings.languageDescription')}
+          </Text>
+
+          <View style={styles.languageContainer}>
+            {languages.map((language) => (
+              <TouchableOpacity
+                key={language.code}
+                style={[
+                  styles.languageOption,
+                  selectedLanguage === language.code && styles.languageOptionSelected,
+                ]}
+                onPress={() => handleLanguageChange(language.code)}
+                activeOpacity={0.7}
+              >
+                <View style={styles.languageInfo}>
+                  <Text style={[
+                    styles.languageName,
+                    selectedLanguage === language.code && styles.languageNameSelected,
+                  ]}>
+                    {language.nativeName}
+                  </Text>
+                  <Text style={[
+                    styles.languageSecondary,
+                    selectedLanguage === language.code && styles.languageSecondarySelected,
+                  ]}>
+                    {language.name}
+                  </Text>
+                </View>
+                {selectedLanguage === language.code && (
+                  <View style={styles.checkmark}>
+                    <Text style={styles.checkmarkText}>✓</Text>
+                  </View>
+                )}
+              </TouchableOpacity>
+            ))}
+          </View>
+        </View>
+
         {/* Game Settings Section */}
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Game Settings</Text>
-          
+          <Text style={styles.sectionTitle}>{t('settings.gameSettings')}</Text>
+
           <SettingRow
-            title="Move Hints"
-            description="Show valid move indicators during gameplay"
+            title={t('settings.moveHints')}
+            description={t('settings.moveHintsDesc')}
             value={settings.showMoveHints}
             onValueChange={(value) => updateSetting('showMoveHints', value)}
           />
-          
+
           <SettingRow
-            title="Animations"
-            description="Enable smooth animations for moves and transitions"
+            title={t('settings.animations')}
+            description={t('settings.animationsDesc')}
             value={settings.animationsEnabled}
             onValueChange={(value) => updateSetting('animationsEnabled', value)}
           />
@@ -97,18 +154,18 @@ export default function SettingsScreen() {
 
         {/* Audio & Haptics Section */}
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Audio & Haptics</Text>
-          
+          <Text style={styles.sectionTitle}>{t('settings.audioHaptics')}</Text>
+
           <SettingRow
-            title="Sound Effects"
-            description="Play sounds for moves and game events"
+            title={t('settings.soundEffects')}
+            description={t('settings.soundEffectsDesc')}
             value={settings.soundEnabled}
             onValueChange={(value) => updateSetting('soundEnabled', value)}
           />
-          
+
           <SettingRow
-            title="Haptic Feedback"
-            description="Vibrate on touch interactions and moves"
+            title={t('settings.hapticFeedback')}
+            description={t('settings.hapticFeedbackDesc')}
             value={settings.hapticsEnabled}
             onValueChange={(value) => updateSetting('hapticsEnabled', value)}
           />
@@ -116,11 +173,11 @@ export default function SettingsScreen() {
 
         {/* Data & Storage Section */}
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Data & Storage</Text>
-          
+          <Text style={styles.sectionTitle}>{t('settings.dataStorage')}</Text>
+
           <SettingRow
-            title="Auto-Save Games"
-            description="Automatically save game progress"
+            title={t('settings.autoSave')}
+            description={t('settings.autoSaveDesc')}
             value={settings.autoSaveEnabled}
             onValueChange={(value) => updateSetting('autoSaveEnabled', value)}
           />
@@ -134,23 +191,21 @@ export default function SettingsScreen() {
 
         {/* About Section */}
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>About</Text>
-          
+          <Text style={styles.sectionTitle}>{t('settings.about')}</Text>
+
           <View style={styles.aboutCard}>
-            <Text style={styles.aboutTitle}>TAK - The Beautiful Game</Text>
+            <Text style={styles.aboutTitle}>{t('settings.aboutTitle')}</Text>
             <Text style={styles.aboutText}>
-              Tak is an abstract strategy game designed by James Ernest and Patrick Rothfuss. 
-              Players compete to create a road connecting opposite edges of the board using 
-              flat stones and capstones, while strategically placing walls to block opponents.
+              {t('settings.aboutText')}
             </Text>
-            <Text style={styles.aboutVersion}>Version 1.0.0</Text>
+            <Text style={styles.aboutVersion}>{t('settings.version')}</Text>
           </View>
         </View>
 
         {/* Reset Section */}
         <View style={styles.section}>
           <Button
-            title="Reset to Defaults"
+            title={t('settings.resetToDefaults')}
             onPress={handleResetSettings}
             style={styles.resetButton}
             textStyle={styles.resetButtonText}
@@ -215,6 +270,72 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: Colors.text,
     marginBottom: scaleHeight(16),
+  },
+
+  languageDescription: {
+    fontSize: scaleFontSize(14),
+    color: Colors.textSecondary,
+    marginBottom: scaleHeight(16),
+  },
+
+  languageContainer: {
+    gap: scaleHeight(12),
+  },
+
+  languageOption: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    backgroundColor: Colors.surface,
+    borderRadius: 12,
+    padding: scaleWidth(16),
+    borderWidth: 2,
+    borderColor: Colors.boardDark,
+  },
+
+  languageOptionSelected: {
+    borderColor: Colors.accent,
+    backgroundColor: Colors.boardDark,
+  },
+
+  languageInfo: {
+    flex: 1,
+  },
+
+  languageName: {
+    fontSize: scaleFontSize(18),
+    fontWeight: '600',
+    color: Colors.text,
+    marginBottom: scaleHeight(4),
+  },
+
+  languageNameSelected: {
+    color: Colors.accent,
+  },
+
+  languageSecondary: {
+    fontSize: scaleFontSize(14),
+    color: Colors.textSecondary,
+  },
+
+  languageSecondarySelected: {
+    color: Colors.text,
+  },
+
+  checkmark: {
+    width: scaleWidth(28),
+    height: scaleWidth(28),
+    borderRadius: scaleWidth(14),
+    backgroundColor: Colors.accent,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginLeft: scaleWidth(12),
+  },
+
+  checkmarkText: {
+    fontSize: scaleFontSize(16),
+    fontWeight: 'bold',
+    color: Colors.background,
   },
 
   settingRow: {

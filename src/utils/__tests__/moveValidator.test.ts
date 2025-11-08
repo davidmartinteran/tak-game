@@ -465,7 +465,7 @@ describe("MoveValidator", () => {
         const result = MoveValidator.validateStackMove(move, gameState);
         expect(result.isValid).toBe(false);
         expect(result.reason).toBe(
-          "Cannot drop stones on wall at (2, 3) without capstone"
+          "Cannot move through wall at (2, 3) - only capstones can flatten walls"
         );
       });
 
@@ -505,6 +505,87 @@ describe("MoveValidator", () => {
 
         const result = MoveValidator.validateStackMove(move, gameState);
         expect(result.isValid).toBe(true);
+      });
+
+      it("should reject drop that would exceed stack height limit", () => {
+        // Create a target stack with 4 stones (board size is 5, so max is 5)
+        const targetStack: Stack = {
+          stones: [
+            { id: "target1", type: StoneType.FLAT, owner: Player.PLAYER2 },
+            { id: "target2", type: StoneType.FLAT, owner: Player.PLAYER1 },
+            { id: "target3", type: StoneType.FLAT, owner: Player.PLAYER2 },
+            { id: "target4", type: StoneType.FLAT, owner: Player.PLAYER1 },
+          ],
+          controlledBy: Player.PLAYER1,
+        };
+        board.squares[2][3] = targetStack;
+
+        // Try to drop 2 stones on it (would make height 6, exceeding limit of 5)
+        const move: StackMove = {
+          type: "move",
+          from: { row: 2, col: 2 },
+          to: { row: 2, col: 3 },
+          stonesToMove: 2,
+          dropPattern: [2],
+        };
+
+        const result = MoveValidator.validateStackMove(move, gameState);
+        expect(result.isValid).toBe(false);
+        expect(result.reason).toContain("stack would exceed maximum height of 5");
+      });
+
+      it("should allow drop that reaches exact stack height limit", () => {
+        // Create a target stack with 4 stones (board size is 5, so max is 5)
+        const targetStack: Stack = {
+          stones: [
+            { id: "target1", type: StoneType.FLAT, owner: Player.PLAYER2 },
+            { id: "target2", type: StoneType.FLAT, owner: Player.PLAYER1 },
+            { id: "target3", type: StoneType.FLAT, owner: Player.PLAYER2 },
+            { id: "target4", type: StoneType.FLAT, owner: Player.PLAYER1 },
+          ],
+          controlledBy: Player.PLAYER1,
+        };
+        board.squares[2][3] = targetStack;
+
+        // Drop 1 stone on it (would make height exactly 5)
+        const move: StackMove = {
+          type: "move",
+          from: { row: 2, col: 2 },
+          to: { row: 2, col: 3 },
+          stonesToMove: 1,
+          dropPattern: [1],
+        };
+
+        const result = MoveValidator.validateStackMove(move, gameState);
+        expect(result.isValid).toBe(true);
+      });
+
+      it("should reject drop on intermediate position that exceeds height limit", () => {
+        // Create a target stack at intermediate position with board-size stones
+        const fullStack: Stack = {
+          stones: [
+            { id: "full1", type: StoneType.FLAT, owner: Player.PLAYER2 },
+            { id: "full2", type: StoneType.FLAT, owner: Player.PLAYER1 },
+            { id: "full3", type: StoneType.FLAT, owner: Player.PLAYER2 },
+            { id: "full4", type: StoneType.FLAT, owner: Player.PLAYER1 },
+            { id: "full5", type: StoneType.FLAT, owner: Player.PLAYER2 },
+          ],
+          controlledBy: Player.PLAYER2,
+        };
+        board.squares[2][3] = fullStack;
+
+        // Try to move through it
+        const move: StackMove = {
+          type: "move",
+          from: { row: 2, col: 2 },
+          to: { row: 2, col: 4 },
+          stonesToMove: 2,
+          dropPattern: [1, 1],
+        };
+
+        const result = MoveValidator.validateStackMove(move, gameState);
+        expect(result.isValid).toBe(false);
+        expect(result.reason).toContain("stack would exceed maximum height");
       });
 
       it("should reject drop pattern with wrong length", () => {
@@ -550,9 +631,7 @@ describe("MoveValidator", () => {
 
         const result = MoveValidator.validateStackMove(move, gameState);
         expect(result.isValid).toBe(false);
-        expect(result.reason).toBe(
-          "Must drop at least one stone per square traversed"
-        );
+        expect(result.reason).toContain("Must drop at least one stone at each square in path");
       });
 
       it("should reject negative drops", () => {
@@ -583,17 +662,18 @@ describe("MoveValidator", () => {
         expect(result.reason).toBe("Cannot drop more stones than remaining");
       });
 
-      it("should allow zero drops at final position", () => {
+      it("should reject zero drops at any position (TAK rule)", () => {
         const move: StackMove = {
           type: "move",
           from: { row: 2, col: 2 },
           to: { row: 2, col: 4 },
           stonesToMove: 2,
-          dropPattern: [2, 0], // All stones dropped at first position
+          dropPattern: [2, 0], // Cannot skip any square in the path
         };
 
         const result = MoveValidator.validateStackMove(move, gameState);
-        expect(result.isValid).toBe(true);
+        expect(result.isValid).toBe(false);
+        expect(result.reason).toContain("Must drop at least one stone at each square in path");
       });
     });
 
@@ -620,7 +700,7 @@ describe("MoveValidator", () => {
         const result = MoveValidator.validateStackMove(move, gameState);
         expect(result.isValid).toBe(false);
         expect(result.reason).toBe(
-          "Cannot drop stones on wall at (2, 3) without capstone"
+          "Cannot move through wall at (2, 3) - only capstones can flatten walls"
         );
       });
 

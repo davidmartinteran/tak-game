@@ -263,10 +263,10 @@ export class MoveValidator {
    */
   private static validateDropPattern(move: StackMove, gameBoard: GameBoard): MoveValidation {
     const { from, to, stonesToMove, dropPattern } = move;
-    
+
     // Get the path for the movement
     const path = this.getMovementPath(from, to);
-    
+
     // Drop pattern must match the path length
     if (dropPattern.length !== path.length) {
       return {
@@ -281,6 +281,22 @@ export class MoveValidator {
         return {
           isValid: false,
           reason: 'Cannot drop negative stones',
+        };
+      }
+    }
+
+    // Check that no stack will exceed maximum height (board size limit)
+    const boardSize = gameBoard.size;
+    for (let i = 0; i < path.length; i++) {
+      const position = path[i];
+      const currentStackHeight = gameBoard.getStackHeight(position);
+      const stonesToDrop = dropPattern[i];
+      const newStackHeight = currentStackHeight + stonesToDrop;
+
+      if (newStackHeight > boardSize) {
+        return {
+          isValid: false,
+          reason: `Cannot drop ${stonesToDrop} stone${stonesToDrop > 1 ? 's' : ''} at (${position.row + 1}, ${position.col + 1}): stack would exceed maximum height of ${boardSize}`,
         };
       }
     }

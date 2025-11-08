@@ -7,6 +7,7 @@ import {
   ViewStyle,
   Animated,
 } from 'react-native';
+import { useTranslation } from 'react-i18next';
 import { Player, StoneType, PlayerReserve } from '../../../types';
 import { Colors } from '../../../constants/colors';
 import { scaleWidth, scaleHeight, scaleFontSize } from '../../../utils/responsive';
@@ -41,8 +42,9 @@ export const PlayerHUD: React.FC<PlayerHUDProps> = React.memo(({
   onClearSelection,
   style,
 }) => {
+  const { t } = useTranslation();
   const playerColor = player === Player.PLAYER1 ? Colors.player1 : Colors.player2;
-  const playerName = player === Player.PLAYER1 ? 'Player 1' : 'Player 2';
+  const playerName = player === Player.PLAYER1 ? t('players.player1') : t('players.player2');
   
   // Determine available stone types based on reserves and game phase
   const getAvailableStoneTypes = (): StoneType[] => {
@@ -131,9 +133,23 @@ export const PlayerHUD: React.FC<PlayerHUDProps> = React.memo(({
     };
     
     const stoneCount = getStoneCount();
-    const displayText = isFirstTurn && stoneType === StoneType.FLAT 
-      ? 'Opponent Flat' 
-      : `${stoneType.charAt(0).toUpperCase() + stoneType.slice(1)} (${stoneCount})`;
+
+    const getStoneTypeName = () => {
+      switch (stoneType) {
+        case StoneType.FLAT:
+          return t('stoneTypes.flat');
+        case StoneType.WALL:
+          return t('stoneTypes.standing');
+        case StoneType.CAPSTONE:
+          return t('stoneTypes.capstone');
+        default:
+          return stoneType;
+      }
+    };
+
+    const displayText = isFirstTurn && stoneType === StoneType.FLAT
+      ? `${t('stoneTypes.flat')} (${t('gameStatus.playerTurnFirstMove').split('-')[1]?.trim() || ''})`
+      : `${getStoneTypeName()} (${stoneCount})`;
     
     const buttonStyle = [
       styles.stoneButton,

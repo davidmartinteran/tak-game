@@ -2,6 +2,7 @@ import React from 'react';
 import { View, Text, StyleSheet, ScrollView, Animated } from 'react-native';
 import { router } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
+import { useTranslation } from 'react-i18next';
 import { Button } from '@/src/components/ui/common/Button';
 import { Colors } from '@/src/constants/colors';
 import { scaleWidth, scaleHeight, scaleFontSize } from '@/src/utils/responsive';
@@ -10,19 +11,20 @@ interface BoardSizeOption {
   size: number;
   flatStones: number;
   capstones: number;
-  description: string;
+  descriptionKey: string;
   gameLength: string;
 }
 
 const BOARD_SIZE_OPTIONS: BoardSizeOption[] = [
-  { size: 4, flatStones: 15, capstones: 0, description: 'Quick Game', gameLength: '10-15 minutes' },
-  { size: 5, flatStones: 21, capstones: 1, description: 'Standard Game', gameLength: '15-25 minutes' },
-  { size: 6, flatStones: 30, capstones: 1, description: 'Extended Game', gameLength: '25-35 minutes' },
-  { size: 7, flatStones: 40, capstones: 2, description: 'Long Game', gameLength: '35-50 minutes' },
-  { size: 8, flatStones: 50, capstones: 2, description: 'Epic Game', gameLength: '50+ minutes' },
+  { size: 4, flatStones: 15, capstones: 0, descriptionKey: 'boardSize.quickGame', gameLength: '10-15' },
+  { size: 5, flatStones: 21, capstones: 1, descriptionKey: 'boardSize.standardGame', gameLength: '15-25' },
+  { size: 6, flatStones: 30, capstones: 1, descriptionKey: 'boardSize.extendedGame', gameLength: '25-35' },
+  { size: 7, flatStones: 40, capstones: 2, descriptionKey: 'boardSize.longGame', gameLength: '35-50' },
+  { size: 8, flatStones: 50, capstones: 2, descriptionKey: 'boardSize.epicGame', gameLength: '50+' },
 ];
 
 export default function BoardSizeScreen() {
+  const { t } = useTranslation();
   const fadeAnim = React.useRef(new Animated.Value(0)).current;
   const slideAnim = React.useRef(new Animated.Value(30)).current;
 
@@ -60,16 +62,16 @@ export default function BoardSizeScreen() {
       {/* Header */}
       <View style={styles.header}>
         <Button
-          title="← Back"
+          title={`← ${t('common.back')}`}
           onPress={handleBack}
           style={styles.backButton}
           textStyle={styles.backButtonText}
         />
-        <Text style={styles.headerTitle}>Select Board Size</Text>
+        <Text style={styles.headerTitle}>{t('boardSize.title')}</Text>
         <View style={styles.headerSpacer} />
       </View>
 
-      <Animated.View 
+      <Animated.View
         style={[
           styles.content,
           {
@@ -80,9 +82,9 @@ export default function BoardSizeScreen() {
       >
         {/* Instructions */}
         <View style={styles.instructionsContainer}>
-          <Text style={styles.instructionsTitle}>Choose Your Game</Text>
+          <Text style={styles.instructionsTitle}>{t('boardSize.chooseYourGame')}</Text>
           <Text style={styles.instructionsText}>
-            Select a board size to start your TAK game. Larger boards offer more strategic depth but take longer to play.
+            {t('boardSize.description')}
           </Text>
         </View>
 
@@ -112,49 +114,49 @@ export default function BoardSizeScreen() {
             >
               <View style={styles.optionHeader}>
                 <View style={styles.optionTitleContainer}>
-                  <Text style={styles.optionTitle}>{option.description}</Text>
+                  <Text style={styles.optionTitle}>{t(option.descriptionKey)}</Text>
                   <Text style={styles.optionSize}>{option.size}×{option.size}</Text>
                 </View>
-                <Text style={styles.optionDuration}>{option.gameLength}</Text>
+                <Text style={styles.optionDuration}>{option.gameLength} {t('boardSize.minutes')}</Text>
               </View>
 
               <View style={styles.optionDetails}>
                 <View style={styles.detailsGrid}>
                   <View style={styles.detailItem}>
-                    <Text style={styles.detailLabel}>Board Size</Text>
+                    <Text style={styles.detailLabel}>{t('boardSize.boardSize')}</Text>
                     <Text style={styles.detailValue}>{option.size}×{option.size}</Text>
                   </View>
                   <View style={styles.detailItem}>
-                    <Text style={styles.detailLabel}>Flat Stones</Text>
-                    <Text style={styles.detailValue}>{option.flatStones} each</Text>
+                    <Text style={styles.detailLabel}>{t('boardSize.flatStones')}</Text>
+                    <Text style={styles.detailValue}>{option.flatStones} {t('common.each')}</Text>
                   </View>
                   <View style={styles.detailItem}>
-                    <Text style={styles.detailLabel}>Capstones</Text>
-                    <Text style={styles.detailValue}>{option.capstones} each</Text>
+                    <Text style={styles.detailLabel}>{t('boardSize.capstones')}</Text>
+                    <Text style={styles.detailValue}>{option.capstones} {t('common.each')}</Text>
                   </View>
                   <View style={styles.detailItem}>
-                    <Text style={styles.detailLabel}>Total Squares</Text>
+                    <Text style={styles.detailLabel}>{t('boardSize.totalSquares')}</Text>
                     <Text style={styles.detailValue}>{option.size * option.size}</Text>
                   </View>
                 </View>
               </View>
 
               <Button
-                title={`Start ${option.description}`}
+                title={t('boardSize.startGame', { description: t(option.descriptionKey) })}
                 onPress={() => handleBoardSizeSelect(option.size)}
-                style={option.size === 5 ? 
-                  StyleSheet.flatten([styles.selectButton, styles.recommendedButton]) : 
+                style={option.size === 5 ?
+                  StyleSheet.flatten([styles.selectButton, styles.recommendedButton]) :
                   styles.selectButton
                 }
-                textStyle={option.size === 5 ? 
-                  StyleSheet.flatten([styles.selectButtonText, styles.recommendedButtonText]) : 
+                textStyle={option.size === 5 ?
+                  StyleSheet.flatten([styles.selectButtonText, styles.recommendedButtonText]) :
                   styles.selectButtonText
                 }
               />
 
               {option.size === 5 && (
                 <View style={styles.recommendedBadge}>
-                  <Text style={styles.recommendedText}>RECOMMENDED</Text>
+                  <Text style={styles.recommendedText}>{t('boardSize.recommended')}</Text>
                 </View>
               )}
             </Animated.View>
