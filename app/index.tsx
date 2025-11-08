@@ -2,12 +2,14 @@ import React from 'react';
 import { View, Text, StyleSheet, Animated } from 'react-native';
 import { router, useFocusEffect } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
+import { useTranslation } from 'react-i18next';
 import { Button } from '@/src/components/ui/common/Button';
 import { Colors } from '@/src/constants/colors';
 import { scaleWidth, scaleHeight, scaleFontSize } from '@/src/utils/responsive';
 import { gamePersistenceService } from '@/src/services/GamePersistenceService';
 
 export default function MainMenuScreen() {
+  const { t } = useTranslation();
   const fadeAnim = React.useRef(new Animated.Value(0)).current;
   const slideAnim = React.useRef(new Animated.Value(50)).current;
   const [hasSavedGame, setHasSavedGame] = React.useState(false);
@@ -86,15 +88,15 @@ export default function MainMenuScreen() {
       >
         {/* Game Title */}
         <View style={styles.titleContainer}>
-          <Text style={styles.gameTitle}>TAK</Text>
-          <Text style={styles.gameSubtitle}>The Beautiful Game</Text>
+          <Text style={styles.gameTitle}>{t('menu.gameTitle')}</Text>
+          <Text style={styles.gameSubtitle}>{t('menu.gameSubtitle')}</Text>
         </View>
 
         {/* Menu Buttons */}
         <View style={styles.menuContainer}>
           {hasSavedGame && (
             <Button
-              title="Resume Game"
+              title={t('menu.resumeGame')}
               onPress={handleResumeGame}
               style={styles.resumeButton}
               textStyle={styles.resumeButtonText}
@@ -102,28 +104,28 @@ export default function MainMenuScreen() {
           )}
 
           <Button
-            title="New Game (5×5)"
+            title={t('menu.newGame5x5')}
             onPress={handleNewGame}
             style={styles.primaryButton}
             textStyle={styles.primaryButtonText}
           />
 
           <Button
-            title="Custom Board Size"
+            title={t('menu.customBoardSize')}
             onPress={handleCustomGame}
             style={styles.secondaryButton}
             textStyle={styles.secondaryButtonText}
           />
 
           <Button
-            title="Settings"
+            title={t('menu.settings')}
             onPress={handleSettings}
             style={styles.secondaryButton}
             textStyle={styles.secondaryButtonText}
           />
 
           <Button
-            title="About"
+            title={t('menu.about')}
             onPress={handleAbout}
             style={styles.secondaryButton}
             textStyle={styles.secondaryButtonText}
@@ -133,7 +135,7 @@ export default function MainMenuScreen() {
         {/* Footer */}
         <View style={styles.footer}>
           <Text style={styles.footerText}>
-            A strategic board game of roads and walls
+            {t('menu.footerText')}
           </Text>
         </View>
       </Animated.View>

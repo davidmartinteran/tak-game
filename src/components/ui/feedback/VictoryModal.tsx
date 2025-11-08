@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, TextStyle } from 'react-native';
+import { useTranslation } from 'react-i18next';
 import { Modal } from './Modal';
 import { Button } from '../common/Button';
 import { VictoryCelebration } from './VictoryCelebration';
@@ -36,8 +37,10 @@ export const VictoryModal: React.FC<VictoryModalProps> = React.memo(({
       setShowCelebration(false);
     }
   }, [visible, winner]);
+  const { t } = useTranslation();
+
   const getPlayerName = (player: Player): string => {
-    return player === Player.PLAYER1 ? 'Player 1' : 'Player 2';
+    return player === Player.PLAYER1 ? t('players.player1') : t('players.player2');
   };
 
   const getPlayerColor = (player: Player): string => {
@@ -46,34 +49,34 @@ export const VictoryModal: React.FC<VictoryModalProps> = React.memo(({
 
   const getVictoryTitle = (): string => {
     if (winner === 'draw') {
-      return 'Draw!';
+      return t('victory.draw');
     } else if (winner) {
-      return `${getPlayerName(winner)} Wins!`;
+      return t('victory.playerWins', { player: getPlayerName(winner) });
     }
-    return 'Game Over';
+    return t('victory.gameOver');
   };
 
   const getVictoryMessage = (): string => {
     if (winner === 'draw') {
-      return 'The game ended in a draw. Both players played excellently!';
+      return t('victory.drawMessage');
     } else if (winner) {
       const playerName = getPlayerName(winner);
       if (victoryType === 'road') {
-        return `Congratulations ${playerName}! You have achieved victory by creating a road connecting opposite edges of the board.`;
+        return t('victory.roadVictoryMessage', { player: playerName });
       } else if (victoryType === 'flat') {
-        return `Congratulations ${playerName}! You have achieved victory by controlling the most flat stones when the game ended.`;
+        return t('victory.flatVictoryMessage', { player: playerName });
       } else {
-        return `Congratulations ${playerName}! You have achieved victory in Tak.`;
+        return t('victory.genericVictoryMessage', { player: playerName });
       }
     }
-    return 'The game has ended.';
+    return t('victory.gameEnded');
   };
 
   const getVictoryTypeDescription = (): string => {
     if (victoryType === 'road') {
-      return 'Road Victory';
+      return t('victory.roadVictory');
     } else if (victoryType === 'flat') {
-      return 'Flat Stone Victory';
+      return t('victory.flatStoneVictory');
     }
     return '';
   };
@@ -130,13 +133,13 @@ export const VictoryModal: React.FC<VictoryModalProps> = React.memo(({
 
         <View style={styles.buttonContainer}>
           <Button
-            title="New Game"
+            title={t('victory.newGame')}
             onPress={onNewGame}
             style={StyleSheet.flatten([styles.button, styles.primaryButton])}
             textStyle={styles.primaryButtonText}
           />
           <Button
-            title="Main Menu"
+            title={t('victory.mainMenu')}
             onPress={onMainMenu}
             style={StyleSheet.flatten([styles.button, styles.secondaryButton])}
             textStyle={styles.secondaryButtonText}

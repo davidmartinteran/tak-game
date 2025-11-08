@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, Text, StyleSheet, TextStyle } from 'react-native';
+import { useTranslation } from 'react-i18next';
 import { Player, GameState } from '../../../types';
 import { Colors } from '../../../constants/colors';
 import { scaleWidth, scaleHeight, scaleFontSize } from '../../../utils/responsive';
@@ -13,8 +14,10 @@ export const GameStatus: React.FC<GameStatusProps> = ({
   gameState,
   style,
 }) => {
+  const { t } = useTranslation();
+
   const getPlayerName = (player: Player): string => {
-    return player === Player.PLAYER1 ? 'Player 1' : 'Player 2';
+    return player === Player.PLAYER1 ? t('players.player1') : t('players.player2');
   };
 
   const getPlayerColor = (player: Player): string => {
@@ -24,18 +27,18 @@ export const GameStatus: React.FC<GameStatusProps> = ({
   const getStatusMessage = (): string => {
     if (gameState.gamePhase === 'ended') {
       if (gameState.winner === 'draw') {
-        return 'Game ended in a draw!';
+        return t('gameStatus.gameEndedDraw');
       } else if (gameState.winner) {
-        return `${getPlayerName(gameState.winner)} wins!`;
+        return t('gameStatus.playerWins', { player: getPlayerName(gameState.winner) });
       }
-      return 'Game ended';
+      return t('gameStatus.gameEnded');
     }
 
     if (gameState.gamePhase === 'first-turn') {
-      return `${getPlayerName(gameState.currentPlayer)}'s turn - Place opponent's flat stone`;
+      return t('gameStatus.playerTurnFirstMove', { player: getPlayerName(gameState.currentPlayer) });
     }
 
-    return `${getPlayerName(gameState.currentPlayer)}'s turn`;
+    return t('gameStatus.playerTurn', { player: getPlayerName(gameState.currentPlayer) });
   };
 
   const getStatusColor = (): string => {
@@ -70,7 +73,7 @@ export const GameStatus: React.FC<GameStatusProps> = ({
     if (gameState.gamePhase === 'first-turn') {
       return (
         <View style={styles.phaseIndicator}>
-          <Text style={styles.phaseText}>First Turn Phase</Text>
+          <Text style={styles.phaseText}>{t('gameStatus.firstTurnPhase')}</Text>
         </View>
       );
     }
@@ -92,13 +95,13 @@ export const GameStatus: React.FC<GameStatusProps> = ({
       {gameState.gamePhase !== 'ended' && (
         <View style={styles.gameInfo}>
           <View style={styles.infoItem}>
-            <Text style={styles.infoLabel}>Turn:</Text>
+            <Text style={styles.infoLabel}>{t('gameStatus.turn')}:</Text>
             <Text style={styles.infoValue}>{gameState.moveHistory.length + 1}</Text>
           </View>
           <View style={styles.infoItem}>
-            <Text style={styles.infoLabel}>Phase:</Text>
+            <Text style={styles.infoLabel}>{t('gameStatus.phase')}:</Text>
             <Text style={styles.infoValue}>
-              {gameState.gamePhase === 'first-turn' ? 'Opening' : 'Normal'}
+              {gameState.gamePhase === 'first-turn' ? t('gameStatus.opening') : t('gameStatus.normal')}
             </Text>
           </View>
         </View>

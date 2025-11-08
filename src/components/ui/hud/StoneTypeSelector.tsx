@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { useTranslation } from 'react-i18next';
 import { StoneType, Player, PlayerReserve } from '../../../types';
 import { Colors } from '../../../constants/colors';
 import { scaleWidth, scaleHeight, scaleFontSize } from '../../../utils/responsive';
@@ -19,6 +20,7 @@ export const StoneTypeSelector: React.FC<StoneTypeSelectorProps> = ({
   reserves,
   currentPlayer,
 }) => {
+  const { t } = useTranslation();
   const currentPlayerStones = reserves[currentPlayer];
 
   // During first turn, players place opponent's stones, so show opponent's color
@@ -75,9 +77,9 @@ export const StoneTypeSelector: React.FC<StoneTypeSelectorProps> = ({
   return (
     <View style={styles.container}>
       <View style={styles.titleContainer}>
-        <Text style={styles.title}>Select Stone Type:</Text>
+        <Text style={styles.title}>{t('hud.selectStoneType')}</Text>
         {selectedType && (
-          <Text style={styles.cancelHint}>Tap again to cancel</Text>
+          <Text style={styles.cancelHint}>{t('hud.tapAgainToCancel')}</Text>
         )}
       </View>
 
@@ -92,7 +94,7 @@ export const StoneTypeSelector: React.FC<StoneTypeSelectorProps> = ({
             <View style={[styles.flatStoneIcon, { backgroundColor: playerColor }]} />
           </View>
           <Text style={getButtonTextStyle(StoneType.FLAT)}>
-            Flat
+            {t('stoneTypes.flat')}
           </Text>
           <Text style={styles.countText}>
             {getRemainingCount(StoneType.FLAT)}
@@ -110,7 +112,7 @@ export const StoneTypeSelector: React.FC<StoneTypeSelectorProps> = ({
             <View style={[styles.wallStoneIcon, { backgroundColor: playerColor }]} />
           </View>
           <Text style={getButtonTextStyle(StoneType.WALL)}>
-            Wall
+            {t('stoneTypes.standing')}
           </Text>
           <Text style={styles.countText}>
             {getRemainingCount(StoneType.WALL)}
@@ -128,7 +130,7 @@ export const StoneTypeSelector: React.FC<StoneTypeSelectorProps> = ({
             <View style={[styles.capstoneIcon, { backgroundColor: playerColor }]} />
           </View>
           <Text style={getButtonTextStyle(StoneType.CAPSTONE)}>
-            Capstone
+            {t('stoneTypes.capstone')}
           </Text>
           <Text style={styles.countText}>
             {getRemainingCount(StoneType.CAPSTONE)}
@@ -138,7 +140,7 @@ export const StoneTypeSelector: React.FC<StoneTypeSelectorProps> = ({
 
       {isFirstTurn && (
         <Text style={styles.helperText}>
-          First turn: Only flat stones allowed
+          {t('hud.firstTurnOnlyFlat')}
         </Text>
       )}
     </View>
