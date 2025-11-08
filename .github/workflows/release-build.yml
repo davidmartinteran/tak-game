@@ -23,6 +23,8 @@ jobs:
   build-release:
     name: Build Release App
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
 
     steps:
       - name: Checkout repository
